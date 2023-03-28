@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/core/utils/widget/base_widget/page.dart';
 import 'package:flutter_application_3/core/utils/widget/const_widget.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,6 @@ abstract class BaseGetWidget<T extends BaseGetxController> extends GetView<T> {
 
   Widget baseShowLoading(WidgetCallback child) {
     return Obx(
-      // MediaQuery.of(context!).viewInsets.bottom;
       () => controller.isShowLoading.value
           ? const Scaffold(
               body: Center(
@@ -41,7 +41,7 @@ abstract class BaseGetWidget<T extends BaseGetxController> extends GetView<T> {
   Widget baseShimmerLoading(WidgetCallback child, {Widget? shimmer}) {
     return Obx(
       () => controller.isShowLoading.value
-          ? shimmer ?? UtilWidget.buildShimmerLoading()
+          ? shimmer ?? PageUtils.buildShimmerLoading()
           : child(),
     );
   }

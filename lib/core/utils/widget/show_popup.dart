@@ -5,12 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_3/core/utils/widget/const_widget.dart';
 import 'package:flutter_application_3/core/utils/widget/utils_button.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-
 import '../../theme/colors.dart';
 import '../../values/dimens.dart';
 import '../../values/strings.dart';
-import 'utils_widget.dart';
 
 class ShowPopup {
   static int _numDialog = 0;

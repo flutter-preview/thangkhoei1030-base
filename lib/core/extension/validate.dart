@@ -78,14 +78,15 @@ extension ValidateInfo on String? {
         if (isStringNotEmpty && !isEmail) {
           return "AppStr.errorEmail.tr";
         }
-        print(isStringNotEmpty && isEmail);
         break;
       case TypeInput.password:
         return isPasswordValidate(minLength: minLength ?? 0)
             ? null
             : "AppStr.errorPassword";
       default:
-        return null;
+        if (isStringEmpty && (this!.length < (minLength ?? 0))) {
+          return "AppStr.error";
+        }
     }
     return null;
   }

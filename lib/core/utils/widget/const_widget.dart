@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/core/utils/widget/utils_button.dart';
+import 'package:get/get.dart';
 
 import '../../values/dimens.dart';
 
@@ -14,6 +16,7 @@ class WidgetConst {
   static const Widget sizedBoxPadding =
       SizedBox(height: AppDimens.defaultPadding);
   static const Widget sizedBox30 = SizedBox(width: 30);
+  static const Widget sizedBoxWidthPadding = SizedBox(width: 20);
   //Loading
   static const Widget buildLoading = CupertinoActivityIndicator();
 
@@ -30,4 +33,10 @@ class WidgetConst {
       endIndent: 1,
     );
   }
+
+  static Widget sizedBox({double? height, double? width}) => SizedBox(
+        height: height,
+        width: width,
+      );
+  static Widget buildVerticalDivider() => const VerticalDivider(width: 1);
 }

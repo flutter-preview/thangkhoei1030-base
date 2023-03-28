@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:get/get.dart';
 
-import '../../enums/input_formatter_enum.dart';
-import '../../theme/colors.dart';
-import '../../values/AppPaddings/padding_input.dart';
-import '../../values/dimens.dart';
-import '../hardware_keyboard_win.dart';
-import '../limit_textfield.dart';
-import '../models/input_text_form_field_model.dart';
+import '../../../enums/input_formatter_enum.dart';
+import '../../../theme/colors.dart';
+import '../../../values/AppPaddings/padding_input.dart';
+import '../../../values/dimens.dart';
+import '../../hardware_keyboard_win.dart';
+import '../../limit_textfield.dart';
+import '../../models/input_text_form_field_model.dart';
 
 class BuildInputText extends StatefulWidget {
   final InputTextModel inputTextFormModel;

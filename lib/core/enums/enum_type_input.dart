@@ -1,1 +1,1 @@
-enum TypeInput { email, phoneNumber, password }
+enum TypeInput { none, email, phoneNumber, password }

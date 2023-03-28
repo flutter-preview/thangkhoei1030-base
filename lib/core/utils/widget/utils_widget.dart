@@ -1,41 +1,30 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_application_3/base/controller/base_controller.dart';
 import 'package:flutter_application_3/core/enums/enum_type_input.dart';
 import 'package:flutter_application_3/core/enums/input_formatter_enum.dart';
 import 'package:flutter_application_3/core/extension/validate.dart';
 import 'package:flutter_application_3/core/utils/widget/const_widget.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:flutter_application_3/core/utils/widget/utils_button.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import '../../theme/colors.dart';
 import '../../values/dimens.dart';
 import '../models/input_text_form_field_model.dart';
+import 'base_widget/card_items.dart';
 import 'dropdown_border.dart';
-import 'input_text_form.dart';
+import 'base_widget/input_text_form.dart';
 import 'input_text_form_with_label.dart';
 
 class UtilWidget {
-  static Widget buildSafeArea(Widget childWidget,
-      {double miniumBottom = 12, Color? color}) {
-    return Container(
-      color: color ?? AppColors.appBarColor(),
-      child: SafeArea(
-        bottom: true,
-        maintainBottomViewPadding: true,
-        minimum: EdgeInsets.only(bottom: miniumBottom),
-        child: childWidget,
-      ),
-    );
-  }
-
   static Widget buildLogo(String imgLogo, double height) {
     return SizedBox(
       height: height,
@@ -87,134 +76,6 @@ class UtilWidget {
     );
   }
 
-  static PreferredSizeWidget buildAppBar(
-    String title, {
-    Color? textColor,
-    Color? actionsIconColor,
-    Color? backbuttonColor,
-    Color? backgroundColor,
-    Function()? func,
-    List<Widget>? actions,
-  }) {
-    return AppBar(
-      actionsIconTheme:
-          IconThemeData(color: actionsIconColor ?? AppColors.textColorWhite),
-      systemOverlayStyle: const SystemUiOverlayStyle(),
-      title: UtilWidget.buildAppBarTitle(
-        title,
-        textColor: textColor ?? AppColors.textColorWhite,
-      ),
-      leading: BackButton(
-        color: backbuttonColor ?? AppColors.textColorWhite,
-        onPressed: func,
-      ),
-      actions: actions,
-      backgroundColor: backgroundColor ?? AppColors.orange,
-    );
-  }
-
-  static PreferredSizeWidget buildBaseBackgroundAppBar({
-    required Widget title,
-    List<Widget>? actions,
-    Widget? leading,
-    bool backButton = true,
-  }) {
-    Widget? leadingAppBar;
-    if (backButton) {
-      leadingAppBar =
-          leading ?? const BackButton(color: AppColors.textColorWhite);
-    }
-    return AppBar(
-      leading: leadingAppBar,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-      ),
-      title: title,
-      automaticallyImplyLeading: backButton,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-            //TODO: Box decoration
-            // image: DecorationImage(
-            //   image: AssetImage(ImageAsset.imgAppBarShort),
-            //   fit: BoxFit.fitWidth,
-            // ),
-            ),
-      ),
-      centerTitle: true,
-      actions: actions,
-    );
-  }
-
-  static Widget buildShimmerLoading() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppDimens.defaultPadding,
-          vertical: AppDimens.defaultPadding),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey.shade400,
-              highlightColor: Colors.grey.shade100,
-              enabled: true,
-              child: ListView.separated(
-                  itemBuilder: (context, index) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: 24.0,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                          ),
-                          WidgetConst.sizedBox10,
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 16.0,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 16.0,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          WidgetConst.sizedBox10,
-                        ],
-                      ),
-                  separatorBuilder: (context, index) => const Divider(
-                        height: 15,
-                      ),
-                  itemCount: 10),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   static Widget buildText(
     String text, {
     FontWeight? fontWeight,
@@ -236,86 +97,61 @@ class UtilWidget {
     );
   }
 
-  static Widget buildContainerWithBorder({
-    required Widget child,
-    double? width,
-    double? height,
-    double? radius,
-    Color? color,
-    Color? borderColor,
-    Function()? onTap,
+  static Widget buildSlideTransition<T extends BaseGetxController>({
+    required Widget Function(int,T) child,
+    required int itemCount,
+    required Rx<int> currentIndexPosition,
+    CarouselController? carouselController,
+    bool enableInfiniteScroll = true,
+    bool enlargeCenterPage = true,
+    bool disableCenter = true,
+    double enlargeFactor = 0.5,
+    bool autoPlay = true,
+    double viewportFraction = 0.9,
+    double aspectRatio = 4 / 3,
+    Function(int, CarouselPageChangedReason)? onPageChanged,
+    Function(double)? onTapIndicator,
+    bool isUsingDotIndicator = true,
+    double? heightScroll,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: width ?? Get.width,
-        height: height ?? Get.height,
-        decoration: BoxDecoration(
-          color: color ?? AppColors.inputText(),
-          border: Border.all(
-            color: borderColor ?? Colors.grey.shade400,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(
-              radius ?? AppDimens.paddingVerySmall,
+    return GetBuilder<T>(
+      builder: (controller) => Column(
+        children: [
+          CarouselSlider.builder(
+            carouselController: carouselController,
+            disableGesture: true,
+            itemCount: itemCount,
+            itemBuilder: (context, index, realIndex) {
+              return child.call(index,controller);
+            },
+            options: CarouselOptions(
+              height: heightScroll,
+              enableInfiniteScroll: enableInfiniteScroll,
+              enlargeCenterPage: enlargeCenterPage,
+              disableCenter: disableCenter,
+              enlargeFactor: enlargeFactor,
+              autoPlay: autoPlay,
+              scrollPhysics: const BouncingScrollPhysics(),
+              viewportFraction: viewportFraction,
+              aspectRatio: aspectRatio,
+              onPageChanged: onPageChanged,
+              pauseAutoPlayInFiniteScroll: true,
             ),
           ),
-        ),
-        child: child,
-      ),
-    );
-  }
-
-  static Widget buildVerticalDivider() {
-    return const VerticalDivider(
-      width: 1,
-    );
-  }
-
-  static Widget buildButtonWithIcon({
-    Function()? function,
-    required String title,
-    required IconData icon,
-    Color? buttonColor,
-    Color? titleColor,
-    Color? iconColor,
-    bool visibilityBorder = false,
-  }) {
-    return GestureDetector(
-      onTap: function,
-      child: Container(
-        decoration: BoxDecoration(
-          color: buttonColor ?? AppColors.lightPrimaryColor,
-          border: Border.all(
-            color: visibilityBorder
-                ? AppColors.lightPrimaryColor
-                : AppColors.textColorWhite,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              AppDimens.paddingVerySmall,
+          if (isUsingDotIndicator)
+            DotsIndicator(
+              onTap: (position) {
+                currentIndexPosition.value = position.toInt();
+                carouselController?.jumpToPage(currentIndexPosition.value);
+                controller.update();
+              },
+              dotsCount: itemCount,
+              position: currentIndexPosition.value.toDouble(),
+              decorator: DotsDecorator(
+                activeColor: AppColors.backGroundColorButtonDefault,
+              ),
             ),
-          ),
-        ),
-        width: Get.width,
-        height: AppDimens.btnMedium,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: iconColor ?? AppColors.textColorWhite,
-            ).paddingSymmetric(
-              horizontal: AppDimens.paddingVerySmall,
-            ),
-            Text(title,
-                style: Get.textTheme.bodyText1!.copyWith(
-                  color: titleColor ?? AppColors.textColorWhite,
-                ))
-          ],
-        ),
-      ).paddingAll(
-        AppDimens.paddingVerySmall,
+        ],
       ),
     );
   }
@@ -380,40 +216,11 @@ class UtilWidget {
     );
   }
 
-  static Widget buildItemShowBottomSheet({
-    required IconData icon,
-    required String title,
-    required Function function,
-    required Color backgroundIcons,
-  }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: backgroundIcons,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: Colors.white,
-        ),
-      ).marginOnly(left: 5),
-      contentPadding: const EdgeInsets.all(8),
-      title: Text(title.tr,
-          style:
-              Get.textTheme.subtitle1!.copyWith(color: AppColors.textColor())),
-      onTap: () {
-        Get.back();
-        function();
-      },
-    );
-  }
-
   static Widget buildDropdown<T>({
     required Map<T, String> mapData,
-    required Rx<T> currentIndex,
+    required Rx<T?> currentIndex,
     required Widget Function(String) itemWidget,
+    required String defaultText,
     double? height,
     double? width,
     Color? backGroundColors,
@@ -453,161 +260,12 @@ class UtilWidget {
           Align(
             alignment: Alignment.center,
             child: AutoSizeText(
-              mapData[currentIndex.value] ?? '',
+              mapData[currentIndex.value] ?? defaultText,
               overflow: TextOverflow.ellipsis,
-            ),
+            ).paddingOnly(left: AppDimens.paddingVerySmall),
           )
         ],
       ),
-    );
-  }
-
-  // static Widget buildDropdown(
-  //   Map<int, String> mapData, {
-  //   required Rx<int?> item,
-  //   double height = 50,
-  //   Color fillColor = AppColors.darkPrimaryColor,
-  //   Function(int?)? onChanged,
-  // }) {
-  //   return Obx(
-  //     () => Container(
-  //       decoration: BoxDecoration(
-  //         color: fillColor,
-  //         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-  //       ),
-  //       child: DropdownButtonHideUnderlineCustom(
-  //         child: DropdownButtonCustom<int>(
-  //           dropdownColor: fillColor,
-  //           isExpanded: true,
-  //           items:
-  // mapData
-  //               .map((key, value) {
-  //                 return MapEntry(
-  //                     key,
-  //                     DropdownMenuItemCustom<int>(
-  //                       value: key,
-  //                       child: Padding(
-  //                         padding: const EdgeInsets.all(8.0),
-  //                         child: Text(
-  //                           mapData[key] ?? "",
-  //                           style: Get.textTheme.subtitle1,
-  //                         ),
-  //                       ),
-  //                     ));
-  //               })
-  //               .values
-  //               .toList(),
-  //           value: item.value,
-  //           onChanged: onChanged,
-  //         ),
-  //       ).paddingOnly(left: AppDimens.paddingSmall),
-  //     ).paddingOnly(
-  //       bottom: AppDimens.paddingTitleAndTextForm,
-  //     ),
-  //   );
-  // }
-
-  static Future<DateTime?> buildDateTimePicker({
-    required DateTime dateTimeInit,
-    DateTime? minTime,
-    DateTime? maxTime,
-  }) async {
-    DateTime? newDateTime = await showRoundedDatePicker(
-      context: Get.context!,
-      height: 310,
-      locale: const Locale('vi', 'VN'),
-      initialDate: dateTimeInit,
-      firstDate: minTime ?? DateTime.utc(DateTime.now().year - 10),
-      lastDate: maxTime,
-      // barrierDismissible: true,
-      theme: ThemeData(
-        primaryColor: AppColors.appBarColor(),
-        dialogBackgroundColor: AppColors.dateTimeColor(),
-        primarySwatch: Colors.deepOrange,
-        disabledColor: AppColors.hintTextColor(),
-        textTheme: TextTheme(
-          caption: Get.textTheme.bodyText1!
-              .copyWith(color: AppColors.hintTextColor()),
-          bodyText2: Get.textTheme.bodyText1,
-        ),
-      ),
-      styleDatePicker: MaterialRoundedDatePickerStyle(
-        paddingMonthHeader: const EdgeInsets.all(15),
-        textStyleMonthYearHeader: Get.textTheme.bodyText1,
-        colorArrowNext: AppColors.hintTextColor(),
-        colorArrowPrevious: AppColors.hintTextColor(),
-        textStyleButtonNegative:
-            Get.textTheme.bodyText1!.copyWith(color: AppColors.hintTextColor()),
-        textStyleButtonPositive:
-            Get.textTheme.bodyText1!.copyWith(color: AppColors.linkText()),
-      ),
-    );
-    return newDateTime;
-  }
-
-  static Future<DateTime?> showDateTimePicker() async {
-    DateTime? newDateTime = await DatePicker.showDateTimePicker(
-      Get.context!,
-      locale: LocaleType.vi,
-      minTime: DateTime.now(),
-    );
-    return newDateTime;
-  }
-
-  static Widget buildCardBase(
-    Widget child, {
-    Color? colorBorder,
-    Color? backgroundColor,
-    BorderRadiusGeometry? borderRadius,
-    bool getShadow = true,
-  }) =>
-      Container(
-        decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.cardBackgroundColor(),
-          borderRadius: borderRadius ??
-              const BorderRadius.all(Radius.circular(AppDimens.radius8)),
-          border: Border.all(
-            color: colorBorder ?? Colors.white,
-          ),
-          boxShadow: getShadow
-              ? [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.9),
-                    blurRadius: 3,
-                  ),
-                ]
-              : [],
-        ),
-        child: child,
-      );
-
-  static List<TextSpan> textImportantStrings({
-    required String source,
-    required String textImportants,
-  }) {
-    int start = source.indexOf(textImportants);
-    int end = start + textImportants.length;
-
-    return [
-      TextSpan(text: source.substring(0, start)),
-      TextSpan(
-        text: source.substring(start, end),
-        style: Get.textTheme.bodyText1!.copyWith(color: AppColors.chipColor),
-      ),
-      TextSpan(text: source.substring(end)),
-    ];
-  }
-
-  static buildAppBarTitle(String title,
-      {bool? textAlignCenter, Color? textColor}) {
-    textAlignCenter = textAlignCenter ?? GetPlatform.isAndroid;
-    return AutoSizeText(
-      title.tr,
-      textAlign: textAlignCenter ? TextAlign.center : TextAlign.left,
-      style: TextStyle(
-        color: textColor ?? AppColors.textColor(),
-      ),
-      maxLines: 2,
     );
   }
 
@@ -635,68 +293,6 @@ class UtilWidget {
         ],
       ).paddingSymmetric(
         horizontal: AppDimens.paddingSmall,
-      ),
-    );
-  }
-
-  static Widget buildListAndBtn({required Widget child, Widget? buildBtn}) {
-    return Column(
-      children: [
-        Expanded(
-          child: child,
-        ),
-        Visibility(visible: buildBtn != null, child: buildBtn ?? Container())
-      ],
-    );
-  }
-
-  static Widget buildTextInput({
-    var height,
-    Color? textColor,
-    String? hintText,
-    Color? hintColor,
-    Color? fillColor,
-    TextEditingController? controller,
-    Function(String)? onChanged,
-    Function()? onTap,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    FocusNode? focusNode,
-    Color? borderColor,
-    bool? autofocus,
-    BorderRadius? borderRadius,
-  }) {
-    return SizedBox(
-      height: height,
-      child: TextField(
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: focusNode,
-        autofocus: autofocus ?? true,
-        style: Get.textTheme.bodyText1,
-        decoration: InputDecoration(
-            hoverColor: Colors.white,
-            prefixIcon: prefixIcon,
-            fillColor: fillColor,
-            filled: true,
-            suffixIcon: suffixIcon,
-            hintText: hintText ?? "",
-            hintStyle: TextStyle(
-              color: hintColor ?? Colors.black,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor ?? Colors.grey),
-              borderRadius:
-                  borderRadius ?? const BorderRadius.all(Radius.circular(5)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor ?? Colors.grey),
-              borderRadius:
-                  borderRadius ?? const BorderRadius.all(Radius.circular(5)),
-            ),
-            contentPadding: const EdgeInsets.all(10)),
-        onChanged: onChanged,
-        onTap: onTap,
-        controller: controller,
       ),
     );
   }
@@ -769,7 +365,7 @@ class UtilWidget {
     String? hintText,
     int? minLengthInputForm,
     int? maxLengthInputForm,
-    required TypeInput typeInput,
+    TypeInput typeInput = TypeInput.none,
     bool showCounter = false,
     bool isReadOnly = false,
     IconData? iconLeading,
@@ -831,126 +427,12 @@ class UtilWidget {
     );
   }
 
-  static Widget buildContainerBase(
-    String title,
-    String description,
-    IconData? icon, {
-    Color? color,
-    Color? textColor,
-    Function()? onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.only(top: 5),
-          width: Get.width / 2.5,
-          height: Get.width / 3.2,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 3,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    icon,
-                    size: 45,
-                    color: textColor,
-                  ).paddingOnly(left: AppDimens.paddingVerySmall),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    textAlign: TextAlign.start,
-                  ).paddingOnly(left: AppDimens.paddingSmall),
-                ],
-              ),
-              Text(
-                description,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 15,
-                ),
-              ).paddingSymmetric(horizontal: 8),
-            ],
-          ),
-        ),
-      );
-
-  static Widget buildProfileItem(
-      {required String title,
-      required Widget leading,
-      Widget trailingWidget =
-          const Icon(Icons.arrow_forward_ios_outlined, size: 15),
-      Function()? onClick,
-      RxInt? count}) {
-    Widget listTitle = ListTile(
-      title: Text(title, style: TextStyle(color: AppColors.textColor())),
-      leading: leading,
-      horizontalTitleGap: 0,
-      trailing: trailingWidget,
-      onTap: onClick,
-    );
-    return count != null ? Obx(() => listTitle) : listTitle;
-  }
-
   static void setPointerAfterText(
     TextEditingController textEditingController,
   ) {
     textEditingController.selection = TextSelection.fromPosition(
       TextPosition(
         offset: textEditingController.text.length,
-      ),
-    );
-  }
-
-  static Widget buildBaseBackgroundScaffold({required Widget child}) {
-    return Container(
-      decoration: const BoxDecoration(
-          //TODO: background
-          // image: DecorationImage(
-          //   image: AssetImage(ImageAsset.imgLoginBg),
-          //   fit: BoxFit.fitWidth,
-          // ),
-          ),
-      child: child,
-    );
-  }
-
-  static Widget buildPageImageBackground({
-    required Widget child,
-    required String imageUrl,
-  }) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: Get.height,
-            width: Get.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(imageUrl),
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          child,
-        ],
       ),
     );
   }
@@ -966,6 +448,232 @@ class UtilWidget {
     return BorderRadius.only(
       topLeft: Radius.circular(radius),
       topRight: Radius.circular(radius),
+    );
+  }
+
+  static Widget buildScrollList<T>({
+    required List<T> items,
+    required Widget Function(int) itemWidget,
+    required Axis scrollDirection,
+    Widget? separatorWidget,
+    double? height,
+    bool isScroll = true,
+  }) {
+    return SizedBox(
+      height: scrollDirection == Axis.horizontal ? height : null,
+      child: ListView.separated(
+        physics: !isScroll ? const NeverScrollableScrollPhysics() : null,
+        shrinkWrap: true,
+        scrollDirection: scrollDirection,
+        itemCount: items.length,
+        itemBuilder: ((context, index) {
+          return itemWidget.call(index);
+        }),
+        separatorBuilder: (BuildContext context, int index) {
+          return separatorWidget ?? const SizedBox();
+        },
+      ),
+    );
+  }
+
+  static Widget buildLiStScrollWithTitle<T>({
+    Function()? action,
+    Widget? actionWidget,
+    required Widget leading,
+    required List<T> items,
+    required Widget Function(int) itemsWidget,
+    required Axis scrollDirection,
+    double? height,
+    double? width,
+    bool isScroll = false,
+    Widget? separatorWidget,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            leading,
+            if (actionWidget != null)
+              UtilButton.baseOnAction(
+                  onTap: action ?? () {}, child: actionWidget)
+          ],
+        ),
+        WidgetConst.sizedBoxPadding,
+        buildScrollList<T>(
+          items: items,
+          itemWidget: itemsWidget,
+          scrollDirection: scrollDirection,
+          height: height,
+          isScroll: isScroll,
+          separatorWidget: separatorWidget,
+        )
+      ],
+    );
+  }
+
+  static Widget buildBodyPadding(Widget body,
+      {double paddingHorizontal = 0, double paddingVertical = 0}) {
+    return body.paddingSymmetric(
+        horizontal: paddingHorizontal, vertical: paddingVertical);
+  }
+
+  static Widget itemLine({
+    Function()? func,
+    double? heightLeading,
+    IconData? iconLeading,
+    bool isShowLeading = true,
+    String? title,
+    TextStyle? titleStyle,
+    String? subtitle,
+    TextStyle? subStyle,
+    Function()? onTap,
+    Widget? trailing,
+    String? urlImages,
+    double? heightImagesLeading,
+    double? widthImageLeading,
+  }) {
+    return UtilButton.baseOnAction(
+        onTap: func ?? () {},
+        child: ListTile(
+          leading: isShowLeading
+              ? buildIconInItemLine(
+                  iconLeading: iconLeading,
+                  urlImages: urlImages,
+                  heightImage: heightImagesLeading,
+                  widthImage: widthImageLeading,
+                )
+              : null,
+          title: title != null
+              ? Text(
+                  title,
+                  style: titleStyle,
+                )
+              : null,
+          subtitle: subtitle != null
+              ? Text(
+                  subtitle,
+                  style: subStyle,
+                )
+              : null,
+          trailing: trailing,
+          onTap: onTap ?? () {},
+        ));
+  }
+
+  static Widget buildIconInItemLine({
+    double? heightImage,
+    double? widthImage,
+    String? urlImages,
+    IconData? iconLeading,
+    Color? colorIcon,
+  }) {
+    return SizedBox(
+      child: urlImages != null
+          ? CardUtils.buildCardCustomRadiusBorder(
+              radiusAll: 10,
+              child: Container(
+                height: heightImage ?? 50,
+                width: widthImage ?? 50,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(urlImages), fit: BoxFit.cover),
+                ),
+              ),
+            )
+          : Icon(
+              iconLeading,
+              color: colorIcon,
+            ),
+    );
+  }
+
+  static Widget buildRating(double rating, {Function()? func}) =>
+      UtilButton.baseOnAction(
+        onTap: func ?? () {},
+        child: Row(
+          children: [
+            Text(
+              rating.toString(),
+              style: Get.textTheme.bodyText1,
+            ),
+            Icon(
+              Icons.star,
+              size: AppDimens.sizeIconSmall,
+              color: AppColors.backGroundColorButtonDefault,
+            )
+          ],
+        ),
+      );
+
+  static Widget buildItemLine({
+    required Widget child,
+    Function()? func,
+    String? urlLeading,
+    String? urlTrailing,
+    Widget? leading,
+    double? heightImage,
+    double? widthImage,
+    double? borderRadiusImage,
+    double? spacing,
+    Widget? trailing,
+  }) {
+    return UtilButton.baseOnAction(
+        onTap: func ?? () {},
+        child: Row(
+          children: [
+            urlLeading != null
+                ? buildImageWidget(
+                    urlLeading,
+                    heightImage: heightImage,
+                    widthImage: widthImage,
+                    raidus: borderRadiusImage,
+                  )
+                : leading ?? const SizedBox(),
+            WidgetConst.sizedBox(width: spacing),
+            Expanded(child: child),
+            WidgetConst.sizedBox(width: spacing),
+            urlTrailing != null
+                ? buildImageWidget(
+                    urlTrailing,
+                    heightImage: heightImage,
+                    widthImage: widthImage,
+                    raidus: borderRadiusImage,
+                  )
+                : trailing ?? const SizedBox(),
+          ],
+        ));
+  }
+
+  ///Default images from network
+  static Widget buildImageWidget(
+    String urlImages, {
+    bool isFromNetwork = true,
+    bool isFromAsset = false,
+    bool isFromLocalFile = false,
+    double? heightImage,
+    double? widthImage,
+    double? raidus,
+  }) {
+    return CardUtils.buildCardCustomRadiusBorder(
+      isBorderAll: true,
+      radiusAll: 20,
+      child: Container(
+        height: heightImage ?? 50,
+        width: widthImage ?? 50,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              fit: BoxFit.cover,
+              image: (isFromNetwork
+                  ? NetworkImage(urlImages)
+                  : isFromAsset
+                      ? AssetImage(urlImages)
+                      : isFromLocalFile
+                          ? FileImage(File(urlImages))
+                          : null) as ImageProvider),
+        ),
+      ),
     );
   }
 }

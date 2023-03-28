@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_3/core/utils/widget/utils_widget.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';
@@ -120,10 +121,11 @@ class UtilButton {
 
   static Widget buildButton(ButtonModel buttonModel) {
     return Container(
-      width: buttonModel.width ?? double.infinity,
+      width: buttonModel.width ?? Get.width * AppDimens.resolutionWidgetButton,
       height: buttonModel.height ?? AppDimens.btnMedium,
       decoration: BoxDecoration(
-        color: buttonModel.backGroundColors,
+        color: buttonModel.backGroundColors ??
+            AppColors.backGroundColorButtonDefault,
         gradient: buttonModel.gradientColors,
         borderRadius: buttonModel.borderRadius ??
             BorderRadius.circular(AppDimens.paddingVerySmall),
@@ -131,18 +133,7 @@ class UtilButton {
       child: baseOnAction(
         onTap:
             !buttonModel.isLoading ? (buttonModel.funcHandle ?? () {}) : () {},
-        child: ElevatedButton(
-          onPressed: null,
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: buttonModel.borderRadius ??
-                  BorderRadius.circular(AppDimens.radius8),
-            ),
-          ),
-          child: Stack(
+        child: Stack(
             children: [
               Align(
                 alignment: buttonModel.alignment ?? Alignment.center,
@@ -156,26 +147,94 @@ class UtilButton {
                   maxLines: 1,
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Visibility(
-                  visible: buttonModel.isLoading && buttonModel.isShowLoading,
-                  child: const SizedBox(
-                    height: AppDimens.btnSmall,
-                    width: AppDimens.btnSmall,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      backgroundColor: Colors.white,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.colorError,
-                      ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Visibility(
+                visible: buttonModel.isLoading && buttonModel.isShowLoading,
+                child: const SizedBox(
+                  height: AppDimens.btnSmall,
+                  width: AppDimens.btnSmall,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    backgroundColor: Colors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.colorError,
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
+      ),
+    );
+  }
+
+  static Widget buildButtonWithIcon({
+    Function()? function,
+    String? title,
+    required IconData icon,
+    String? urlIcon,
+    Color? buttonColor,
+    Color? titleColor,
+    Color? iconColor,
+    bool visibilityBorder = false,
+    double? sizeIcon,
+    Color? colorBorder,
+  }) {
+    return UtilButton.baseOnAction(
+      onTap: () => function?.call(),
+      child: urlIcon != null
+          ? UtilWidget.buildImageWidget(urlIcon)
+          : Container(
+              decoration: BoxDecoration(
+                color: buttonColor,
+                border: Border.all(
+                  color: colorBorder ?? Colors.white,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(
+                    AppDimens.paddingVerySmall,
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    color: iconColor,
+                    size: sizeIcon,
+                  ).paddingSymmetric(
+                    horizontal: AppDimens.paddingVerySmall,
+                  ),
+                  if (title != null)
+                    Text(title, style: Get.textTheme.bodyText1!)
+                ],
+              ),
+            ).paddingAll(
+              AppDimens.paddingVerySmall,
+            ),
+    );
+  }
+
+  static Widget buildTextButton({
+    Function()? func,
+    required String title,
+    Color? colorText,
+    bool isUnderLineText = false,
+    TextOverflow? overflow,
+    int? maxLines,
+  }) {
+    return baseOnAction(
+      onTap: func ?? () {},
+      child: Text(
+        title,
+        style: Get.textTheme.bodyText1!.copyWith(
+            overflow: overflow,
+            color: colorText,
+            decoration: isUnderLineText ? TextDecoration.underline : null),
+        maxLines: maxLines,
       ),
     );
   }
