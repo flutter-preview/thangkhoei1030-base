@@ -12,7 +12,6 @@ class CardUtils {
     double? radiusBottomRight,
     double? radiusBottomLeft,
     required Widget child,
-    bool isBorderAll = true,
     double? radiusAll,
     double spreadRadius = 2.5,
     double blurRadius = 10,

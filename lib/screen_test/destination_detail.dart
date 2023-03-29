@@ -17,16 +17,26 @@ Widget _buildPageDestinationDetail(TestController controller) {
             heightScroll: 300,
             viewportFraction: 0.55,
             child: (index, controller) => _buildDetail(index, controller),
-            itemCount: 5,
+            itemsCount: 5,
             currentIndexPosition: controller.currentPageScroll,
             isUsingDotIndicator: false,
             onPageChanged: (index, reason) =>
                 controller.currentPageScroll.value = index,
           ),
-          WidgetConst.sizedBoxPadding,
-          _buildPicture(),
-          WidgetConst.sizedBoxPadding,
-          buildOtherPlace(),
+          Column(
+            children: [
+              WidgetConst.sizedBoxPadding,
+              _buildPicture(),
+              WidgetConst.sizedBoxPadding,
+              buildButton(),
+              WidgetConst.sizedBoxPadding,
+              buildOtherPlace(),
+              WidgetConst.sizedBoxPadding,
+              _buildComment(),
+            ],
+          ).paddingSymmetric(
+            horizontal: AppDimens.paddingVerySmall,
+          )
         ],
       ),
     ),
@@ -36,7 +46,6 @@ Widget _buildPageDestinationDetail(TestController controller) {
 Widget _buildDetail(int index, TestController controller) {
   return Obx(
     () => CardUtils.buildCardCustomRadiusBorder(
-      isBorderAll: true,
       radiusAll: 20,
       child: CardUtils.buildContentInCard(
           url:
@@ -47,28 +56,26 @@ Widget _buildDetail(int index, TestController controller) {
                     const Text('data'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (index) => Icon(Icons.star)),
+                      children:
+                          List.generate(5, (index) => const Icon(Icons.star)),
                     ),
                   ],
                 )
-              : SizedBox()),
+              : const SizedBox()),
     ),
   );
 }
 
 Widget buildOtherPlace() {
   return UtilWidget.buildLiStScrollWithTitle(
-    leading:
-        Text("title,").paddingSymmetric(horizontal: AppDimens.paddingSmall),
-    actionWidget: Text("View detail,"),
-    items: [1, 2, 3, 4, 5, 6],
+    leading: UtilWidget.buildTitle(text: 'Other place'),
+    actionWidget: UtilButton.buildTextButton(title: 'View Detail,'),
+    itemsCount: 5,
     itemsWidget: (index) => _buildItemInOtherPlace(),
     scrollDirection: Axis.horizontal,
     height: 75,
     isScroll: true,
     separatorWidget: WidgetConst.sizedBoxWidth10,
-  ).paddingSymmetric(
-    horizontal: AppDimens.paddingVerySmall,
   );
 }
 
@@ -99,7 +106,7 @@ Widget _buildPicture() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text("data"),
+      UtilWidget.buildTitle(text: "Pictures"),
       WidgetConst.sizedBoxPadding,
       SizedBox(
         width: Get.width,
@@ -141,5 +148,110 @@ Widget _buildPicture() {
         ),
       ),
     ],
-  ).paddingSymmetric(horizontal: AppDimens.paddingSmall);
+  );
+}
+
+Widget _buildComment() {
+  return UtilWidget.buildLiStScrollWithTitle(
+    leading: UtilWidget.buildTitle(text: 'Comment'),
+    itemsCount: 2,
+    isScroll: false,
+    itemsWidget: (i) {
+      return Column(
+        children: [
+          buildItemComment(),
+          WidgetConst.sizedBox10,
+          UtilWidget.buildScrollList(
+              isScroll: false,
+              itemsCount: 2,
+              itemWidget: (index) {
+                return buildItemComment(isReplyComment: true);
+              },
+              separatorWidget: WidgetConst.sizedBox10,
+              scrollDirection: Axis.vertical),
+          WidgetConst.sizedBoxPadding,
+        ],
+      ).paddingOnly(left: 25, right: AppDimens.padding15);
+    },
+    scrollDirection: Axis.vertical,
+  );
+}
+
+Widget buildItemComment({
+  bool isReplyComment = false,
+}) {
+  return Row(
+    children: [
+      const Icon(
+        Icons.account_circle_outlined,
+        size: AppDimens.sizeIcon40,
+      ),
+      Expanded(
+        child: CardUtils.buildCardCustomRadiusBorder(
+          child: Container(
+            color: Colors.green,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AutoSizeText(
+                      "Ngo ngoc sang",
+                      style: Get.textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    AutoSizeText(
+                      "Ngo ngoc sang",
+                      style: Get.textTheme.bodyText2!.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ).paddingSymmetric(horizontal: AppDimens.paddingSmall),
+                const Divider(
+                  color: Colors.white,
+                  height: 10,
+                  thickness: 2,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    UtilWidget.buildAction(
+                        text: "like",
+                        iconData: Icons.favorite_outline,
+                        iconSize: AppDimens.sizeIconSmall),
+                    UtilWidget.buildAction(
+                        text: "comment",
+                        iconData: Icons.favorite_outline,
+                        iconSize: AppDimens.sizeIconSmall),
+                    UtilWidget.buildAction(
+                        text: "share",
+                        iconData: Icons.favorite_outline,
+                        iconSize: AppDimens.sizeIconSmall),
+                  ],
+                ).paddingSymmetric(horizontal: AppDimens.paddingMedium)
+              ],
+            ),
+          ),
+          radiusAll: 10,
+        ).paddingOnly(
+          left: AppDimens.defaultPadding,
+          top: AppDimens.paddingLabel,
+          bottom: AppDimens.paddingLabel,
+        ),
+      ),
+    ],
+  ).paddingOnly(left: isReplyComment ? AppDimens.padding25 : 0);
+}
+
+Widget buildButton() {
+  return CardUtils.buildCardCustomRadiusBorder(
+    radiusAll: AppDimens.radiusButtonDefault,
+    boxShadows: BoxShadowsConst.shadowCard,
+    child: UtilButton.buildButton(
+        ButtonModel(btnTitle: 'Books', colors: [AppColors.backGroundColorButtonDefault])),
+  );
 }

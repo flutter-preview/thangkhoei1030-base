@@ -134,19 +134,19 @@ class UtilButton {
         onTap:
             !buttonModel.isLoading ? (buttonModel.funcHandle ?? () {}) : () {},
         child: Stack(
-            children: [
-              Align(
-                alignment: buttonModel.alignment ?? Alignment.center,
-                child: Text(
-                  buttonModel.btnTitle.tr,
-                  style: TextStyle(
-                    fontSize: buttonModel.fontSize ?? AppDimens.fontMedium(),
-                    color: buttonModel.textColor ?? Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+          children: [
+            Align(
+              alignment: buttonModel.alignment ?? Alignment.center,
+              child: Text(
+                buttonModel.btnTitle.tr,
+                style: TextStyle(
+                  fontSize: buttonModel.fontSize ?? AppDimens.fontMedium(),
+                  color: buttonModel.textColor ?? Colors.white,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
+            ),
             Align(
               alignment: Alignment.centerRight,
               child: Visibility(

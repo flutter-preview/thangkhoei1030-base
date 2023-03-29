@@ -23,6 +23,7 @@ class AppDimens {
   static const double btnLarge = 70;
   static const double btnQuickCreate = 73;
   static const double btnRecommend = 30;
+  static const double sizeIcon40 = 40;
 
   static const double sizeIconVerySmall = 12;
   static const double sizeIconSmall = 16;
@@ -50,6 +51,8 @@ class AppDimens {
   static const double paddingHuge = 32.0;
   static const double paddingItemList = 18.0;
   static const double paddingLabel = 4;
+  static const double padding25 = 25;
+  static const double padding15 = 15;
 
   static const double showAppBarDetails = 200;
   static const double sizeAppBarBig = 120;

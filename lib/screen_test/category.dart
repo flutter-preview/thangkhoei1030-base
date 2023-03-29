@@ -11,9 +11,9 @@ Widget _buildPageCategory(TestController controller) {
         ]),
     body: SingleChildScrollView(
       child: Column(children: [
-        UtilWidget.buildScrollList<String>(
+        UtilWidget.buildScrollList(
           height: 100,
-          items: controller.categoryListString,
+          itemsCount: controller.categoryListString.length,
           itemWidget: (index) {
             return _buildChipScroll(controller, index);
           },
@@ -83,7 +83,7 @@ Widget _buildDetailInfo() {
               ],
             ),
           ),
-          UtilWidget.buildRating(4.7),
+          UtilWidget.buildAction(text: 4.7.toString(), iconData: Icons.star),
         ],
       ),
       const Divider(),
@@ -100,7 +100,7 @@ Widget _buildSlideScroll(TestController controller) {
     child: (index, controller) => _buildCardDetail(controller)
         .marginSymmetric(vertical: AppDimens.paddingVerySmall),
     currentIndexPosition: controller.currentPageScroll,
-    itemCount: 5,
+    itemsCount: 5,
     onPageChanged: (index, reason) =>
         controller.currentPageScroll.value = index,
   );
@@ -110,7 +110,7 @@ Widget _buildSlideScroll(TestController controller) {
   //       CarouselSlider.builder(
   //         carouselController: controller.carouselController,
   //         disableGesture: true,
-  //         itemCount: 5,
+  //         itemsCount: 5,
   //         itemBuilder: (context, index, realIndex) {
   //           return _buildCardDetail(controller)
   //               .marginSymmetric(vertical: AppDimens.paddingVerySmall);
@@ -147,15 +147,18 @@ Widget _buildSlideScroll(TestController controller) {
 
 Widget buildCategoryHorizontal() {
   return UtilWidget.buildLiStScrollWithTitle(
-    leading: Text('title'),
-    items: [1, 2, 3, 4, 5, 1, 2, 3, 4, 5],
+    leading: UtilWidget.buildTitle(text: 'Title'),
+    itemsCount: 10,
     itemsWidget: (index) => CardUtils.buildCardCustomRadiusBorder(
         blurRadius: 20,
         spreadRadius: 0.1,
         radiusAll: 10,
         boxShadows: BoxShadowsConst.shadowCard,
         child: UtilWidget.buildItemLine(
-          trailing: UtilWidget.buildRating(4.8),
+          trailing: UtilWidget.buildAction(
+            text: 4.8.toString(),
+            iconData: Icons.star,
+          ),
           spacing: 10,
           heightImage: 60,
           widthImage: 60,

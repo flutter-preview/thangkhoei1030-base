@@ -98,8 +98,8 @@ class UtilWidget {
   }
 
   static Widget buildSlideTransition<T extends BaseGetxController>({
-    required Widget Function(int,T) child,
-    required int itemCount,
+    required Widget Function(int, T) child,
+    required int itemsCount,
     required Rx<int> currentIndexPosition,
     CarouselController? carouselController,
     bool enableInfiniteScroll = true,
@@ -120,9 +120,9 @@ class UtilWidget {
           CarouselSlider.builder(
             carouselController: carouselController,
             disableGesture: true,
-            itemCount: itemCount,
+            itemCount: itemsCount,
             itemBuilder: (context, index, realIndex) {
-              return child.call(index,controller);
+              return child.call(index, controller);
             },
             options: CarouselOptions(
               height: heightScroll,
@@ -145,7 +145,7 @@ class UtilWidget {
                 carouselController?.jumpToPage(currentIndexPosition.value);
                 controller.update();
               },
-              dotsCount: itemCount,
+              dotsCount: itemsCount,
               position: currentIndexPosition.value.toDouble(),
               decorator: DotsDecorator(
                 activeColor: AppColors.backGroundColorButtonDefault,
@@ -296,53 +296,6 @@ class UtilWidget {
       ),
     );
   }
-  //TODO: build search
-  // static Widget buildSearch(
-  //     {required TextEditingController textEditingController,
-  //     String hintSearch = AppStr.hintSearch,
-  //     required Function function,
-  //     required RxBool isClear,
-  //     Color? hintColor,
-  //     Color? borderColor,
-  //     bool? autofocus,
-  //     Color? backgroundColor}) {
-  //   return UtilWidget.buildTextInput(
-  //     height: 40.0,
-  //     controller: textEditingController,
-  //     hintText: hintSearch,
-  //     textColor: AppColors.textColor(),
-  //     hintColor: hintColor ?? AppColors.hintTextColor(),
-  //     borderColor: borderColor ?? AppColors.textColorWhite,
-  //     autofocus: autofocus,
-  //     fillColor: backgroundColor ?? AppColors.textColorWhite,
-  //     borderRadius: const BorderRadius.all(Radius.circular(25)),
-  //     onChanged: (v) {
-  //       onTextChange(() {
-  //         function();
-  //         isClear.value = textEditingController.text.isNotEmpty;
-  //       });
-  //     },
-  //     prefixIcon: const Icon(
-  //       Icons.search,
-  //       color: AppColors.lightPrimaryColor,
-  //       size: 20,
-  //     ),
-  //     suffixIcon: Obx(() => Visibility(
-  //           visible: isClear.value,
-  //           child: IconButton(
-  //             onPressed: () {
-  //               textEditingController.clear();
-  //               isClear.value = false;
-  //               function();
-  //             },
-  //             icon: Icon(
-  //               Icons.clear,
-  //               color: AppColors.hintTextColor(),
-  //             ),
-  //           ).paddingOnly(bottom: AppDimens.paddingSmall),
-  //         )),
-  //   ).paddingSymmetric(vertical: AppDimens.paddingSmall);
-  // }
 
   //TODO: Build Input
   static Widget buildInput(
@@ -451,8 +404,8 @@ class UtilWidget {
     );
   }
 
-  static Widget buildScrollList<T>({
-    required List<T> items,
+  static Widget buildScrollList({
+    required int itemsCount,
     required Widget Function(int) itemWidget,
     required Axis scrollDirection,
     Widget? separatorWidget,
@@ -465,7 +418,7 @@ class UtilWidget {
         physics: !isScroll ? const NeverScrollableScrollPhysics() : null,
         shrinkWrap: true,
         scrollDirection: scrollDirection,
-        itemCount: items.length,
+        itemCount: itemsCount,
         itemBuilder: ((context, index) {
           return itemWidget.call(index);
         }),
@@ -480,7 +433,7 @@ class UtilWidget {
     Function()? action,
     Widget? actionWidget,
     required Widget leading,
-    required List<T> items,
+    required int itemsCount,
     required Widget Function(int) itemsWidget,
     required Axis scrollDirection,
     double? height,
@@ -501,8 +454,8 @@ class UtilWidget {
           ],
         ),
         WidgetConst.sizedBoxPadding,
-        buildScrollList<T>(
-          items: items,
+        buildScrollList(
+          itemsCount: itemsCount,
           itemWidget: itemsWidget,
           scrollDirection: scrollDirection,
           height: height,
@@ -589,23 +542,23 @@ class UtilWidget {
     );
   }
 
-  static Widget buildRating(double rating, {Function()? func}) =>
-      UtilButton.baseOnAction(
-        onTap: func ?? () {},
-        child: Row(
-          children: [
-            Text(
-              rating.toString(),
-              style: Get.textTheme.bodyText1,
-            ),
-            Icon(
-              Icons.star,
-              size: AppDimens.sizeIconSmall,
-              color: AppColors.backGroundColorButtonDefault,
-            )
-          ],
-        ),
-      );
+  // static Widget buildRating(double rating, {Function()? func}) =>
+  //     UtilButton.baseOnAction(
+  //       onTap: func ?? () {},
+  //       child: Row(
+  //         children: [
+  //           Text(
+  //             rating.toString(),
+  //             style: Get.textTheme.bodyText1,
+  //           ),
+  //           Icon(
+  //             Icons.star,
+  //             size: AppDimens.sizeIconSmall,
+  //             color: AppColors.backGroundColorButtonDefault,
+  //           )
+  //         ],
+  //       ),
+  //     );
 
   static Widget buildItemLine({
     required Widget child,
@@ -618,6 +571,9 @@ class UtilWidget {
     double? borderRadiusImage,
     double? spacing,
     Widget? trailing,
+    bool isFromAsset = false,
+    bool isFromLocalFile = false,
+    bool isFromNetwork = true,
   }) {
     return UtilButton.baseOnAction(
         onTap: func ?? () {},
@@ -629,6 +585,9 @@ class UtilWidget {
                     heightImage: heightImage,
                     widthImage: widthImage,
                     raidus: borderRadiusImage,
+                    isFromAsset: isFromAsset,
+                    isFromLocalFile: isFromLocalFile,
+                    isFromNetwork: isFromNetwork,
                   )
                 : leading ?? const SizedBox(),
             WidgetConst.sizedBox(width: spacing),
@@ -640,6 +599,9 @@ class UtilWidget {
                     heightImage: heightImage,
                     widthImage: widthImage,
                     raidus: borderRadiusImage,
+                    isFromAsset: isFromAsset,
+                    isFromLocalFile: isFromLocalFile,
+                    isFromNetwork: isFromNetwork,
                   )
                 : trailing ?? const SizedBox(),
           ],
@@ -657,7 +619,6 @@ class UtilWidget {
     double? raidus,
   }) {
     return CardUtils.buildCardCustomRadiusBorder(
-      isBorderAll: true,
       radiusAll: 20,
       child: Container(
         height: heightImage ?? 50,
@@ -673,6 +634,57 @@ class UtilWidget {
                           ? FileImage(File(urlImages))
                           : null) as ImageProvider),
         ),
+      ),
+    );
+  }
+
+  static Widget buildAction({
+    required String text,
+    TextStyle? textStyle,
+    IconData? iconData,
+    double? iconSize,
+    Color colorIcon = Colors.white,
+    Function()? func,
+    String? urlImage,
+    bool isFromAsset = false,
+    bool isFromLocalFile = false,
+    bool isFromNetwork = true,
+  }) {
+    return UtilButton.baseOnAction(
+      onTap: func ?? () {},
+      child: Row(
+        children: [
+          AutoSizeText(
+            text,
+            style: textStyle ??
+                Get.textTheme.bodyText1!.copyWith(color: Colors.white),
+          ),
+          urlImage != null
+              ? buildImageWidget(
+                  urlImage,
+                  heightImage: iconSize,
+                  widthImage: iconSize,
+                  isFromAsset: isFromAsset,
+                  isFromLocalFile: isFromLocalFile,
+                  isFromNetwork: isFromNetwork,
+                )
+              : Icon(
+                  iconData,
+                  size: iconSize,
+                  color: colorIcon,
+                ),
+        ],
+      ),
+    );
+  }
+
+  static Widget buildTitle(
+      {required String text, bool isBold = true, Color? colorText}) {
+    return AutoSizeText(
+      text,
+      style: Get.textTheme.titleLarge!.copyWith(
+        fontWeight: isBold ? FontWeight.bold : null,
+        color: colorText,
       ),
     );
   }
