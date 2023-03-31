@@ -16,13 +16,13 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:table_calendar/table_calendar.dart';
 import '../../theme/colors.dart';
 import '../../values/dimens.dart';
 import '../models/input_text_form_field_model.dart';
 import 'base_widget/card_items.dart';
 import 'dropdown_border.dart';
 import 'base_widget/input_text_form.dart';
-import 'input_text_form_with_label.dart';
 
 class UtilWidget {
   static Widget buildLogo(String imgLogo, double height) {
@@ -131,7 +131,6 @@ class UtilWidget {
               disableCenter: disableCenter,
               enlargeFactor: enlargeFactor,
               autoPlay: autoPlay,
-              scrollPhysics: const BouncingScrollPhysics(),
               viewportFraction: viewportFraction,
               aspectRatio: aspectRatio,
               onPageChanged: onPageChanged,
@@ -324,60 +323,51 @@ class UtilWidget {
     IconData? iconLeading,
     double borderRadius = 20,
     EdgeInsetsGeometry? contentPadding,
+    TextAlign? alignText,
+    bool isUseSuffixIcon = true,
+
   }) {
     return SizedBox(
-      width: Get.width * AppDimens.resolutionWidgetTextEditing,
-      child: Column(
-        children: [
-          BuildInputTextWithLabel(
-            label: label,
-            labelRequired: isRequired ? " *" : "",
-            padding: label.isEmpty ? 0 : AppDimens.paddingSmall,
-            paddingText: label.isEmpty
-                ? EdgeInsets.zero
-                : const EdgeInsets.only(top: AppDimens.paddingSmall),
-            buildInputText: BuildInputText(
-              InputTextModel(
-                  borderRadius: borderRadius,
-                  enable: enable,
-                  textColor: textColor,
-                  errorTextColor: AppColors.colorRed444,
-                  fillColor: fillColor,
-                  controller: textEditingController,
-                  currentNode: focusNode,
-                  contentPadding: contentPadding,
-                  nextNode: nextNode,
-                  inputFormatter: inputFormatters,
-                  suffixIcon: icon,
-                  onChanged: onChanged,
-                  maxLengthInputForm: maxLengthInputForm,
-                  onTap: onTap,
-                  hintText: hintText,
-                  onNext: onNext,
-                  iconLeading: iconLeading,
-                  isReadOnly: isReadOnly,
-                  isShowCounterText: showCounter,
-                  submitFunc: submitFunc,
-                  iconNextTextInputAction: iconNextTextInputAction,
-                  textInputType: textInputType,
-                  hintTextSize: AppDimens.textSizeInput,
-                  textSize: AppDimens.textSizeInput,
-                  obscureText: typeInput == TypeInput.password,
-                  validator: (val) {
-                    if (isRequired) {
-                      if (val!.isStringEmpty) {
-                        //return AppStr.productDetailNotEmpty.tr;
-                        return "label + AppStr.errorEmpty";
-                      }
-                    }
-                    return val.validator(typeInput,
-                        minLength: minLengthInputForm);
-                  }),
-            ),
-          ),
-        ],
-      ),
-    );
+        width: Get.width,
+        child: BuildInputText(
+          InputTextModel(
+            textAlign: alignText,
+              borderRadius: borderRadius,
+              enable: enable,
+              textColor: textColor,
+              errorTextColor: AppColors.colorRed444,
+              fillColor: fillColor,
+              controller: textEditingController,
+              currentNode: focusNode,
+              contentPadding: contentPadding,
+              nextNode: nextNode,
+              inputFormatter: inputFormatters,
+              suffixIcon: icon,
+              onChanged: onChanged,
+              maxLengthInputForm: maxLengthInputForm,
+              onTap: onTap,
+              hintText: hintText,
+              onNext: onNext,
+              iconLeading: iconLeading,
+              isReadOnly: isReadOnly,
+              isShowCounterText: showCounter,
+              submitFunc: submitFunc,
+              iconNextTextInputAction: iconNextTextInputAction,
+              textInputType: textInputType,
+              hintTextSize: AppDimens.textSizeInput,
+              textSize: AppDimens.textSizeInput,
+              obscureText: typeInput == TypeInput.password,
+              isUseSuffixIcon: isUseSuffixIcon,
+              validator: (val) {
+                if (isRequired) {
+                  if (val!.isStringEmpty) {
+                    //return AppStr.productDetailNotEmpty.tr;
+                    return "label + AppStr.errorEmpty";
+                  }
+                }
+                return val.validator(typeInput, minLength: minLengthInputForm);
+              }),
+        ));
   }
 
   static void setPointerAfterText(
@@ -437,7 +427,6 @@ class UtilWidget {
     required Widget Function(int) itemsWidget,
     required Axis scrollDirection,
     double? height,
-    double? width,
     bool isScroll = false,
     Widget? separatorWidget,
   }) {
@@ -510,7 +499,7 @@ class UtilWidget {
                   style: subStyle,
                 )
               : null,
-          trailing: trailing,
+          trailing: FittedBox(child: trailing),
           onTap: onTap ?? () {},
         ));
   }
@@ -522,24 +511,22 @@ class UtilWidget {
     IconData? iconLeading,
     Color? colorIcon,
   }) {
-    return SizedBox(
-      child: urlImages != null
-          ? CardUtils.buildCardCustomRadiusBorder(
-              radiusAll: 10,
-              child: Container(
-                height: heightImage ?? 50,
-                width: widthImage ?? 50,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(urlImages), fit: BoxFit.cover),
-                ),
+    return urlImages != null
+        ? CardUtils.buildCardCustomRadiusBorder(
+            radiusAll: 10,
+            child: Container(
+              height: heightImage ?? 50,
+              width: widthImage ?? 50,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(urlImages), fit: BoxFit.cover),
               ),
-            )
-          : Icon(
-              iconLeading,
-              color: colorIcon,
             ),
-    );
+          )
+        : Icon(
+            iconLeading,
+            color: colorIcon,
+          );
   }
 
   // static Widget buildRating(double rating, {Function()? func}) =>
@@ -649,6 +636,7 @@ class UtilWidget {
     bool isFromAsset = false,
     bool isFromLocalFile = false,
     bool isFromNetwork = true,
+    double? spaceAround,
   }) {
     return UtilButton.baseOnAction(
       onTap: func ?? () {},
@@ -656,9 +644,9 @@ class UtilWidget {
         children: [
           AutoSizeText(
             text,
-            style: textStyle ??
-                Get.textTheme.bodyText1!.copyWith(color: Colors.white),
+            style: textStyle ?? Get.textTheme.bodyText1!,
           ),
+          WidgetConst.sizedBox(width: spaceAround),
           urlImage != null
               ? buildImageWidget(
                   urlImage,

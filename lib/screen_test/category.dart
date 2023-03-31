@@ -83,7 +83,11 @@ Widget _buildDetailInfo() {
               ],
             ),
           ),
-          UtilWidget.buildAction(text: 4.7.toString(), iconData: Icons.star),
+          UtilWidget.buildAction(
+              text: 4.7.toString(),
+              iconData: Icons.star,
+              spaceAround: AppDimens.paddingVerySmall,
+              colorIcon: AppColors.backGroundColorButtonDefault),
         ],
       ),
       const Divider(),
@@ -156,9 +160,10 @@ Widget buildCategoryHorizontal() {
         boxShadows: BoxShadowsConst.shadowCard,
         child: UtilWidget.buildItemLine(
           trailing: UtilWidget.buildAction(
-            text: 4.8.toString(),
-            iconData: Icons.star,
-          ),
+              spaceAround: AppDimens.paddingVerySmall,
+              text: 4.8.toString(),
+              iconData: Icons.star,
+              colorIcon: AppColors.backGroundColorButtonDefault),
           spacing: 10,
           heightImage: 60,
           widthImage: 60,

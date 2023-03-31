@@ -280,6 +280,8 @@ class AppColors {
     Colors.teal.shade50,
   ];
 
-  static Color colorHintText = const Color.fromRGBO(0, 0, 0, 0.3);
+  static const Color colorHintText =  Color.fromRGBO(0, 0, 0, 0.3);
   static Color backGroundColorButtonDefault = HexColor.fromHex('#44C7B3');
+  static const Color rangeTimeSelect =  Color.fromRGBO(68, 199, 179, 0.56);
+  static const Color backgroundColorInput =  Color.fromRGBO(217, 217, 217, 0.51);
 }

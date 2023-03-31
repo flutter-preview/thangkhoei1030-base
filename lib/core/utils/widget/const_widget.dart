@@ -13,10 +13,13 @@ class WidgetConst {
   static const Widget sizedBoxWidth5 = SizedBox(width: 5);
   static const Widget sizedBoxPaddingHuge =
       SizedBox(height: AppDimens.paddingHuge);
+  static const Widget sizedBoxPaddingSmall = SizedBox(height: 12);
   static const Widget sizedBoxPadding =
       SizedBox(height: AppDimens.defaultPadding);
-  static const Widget sizedBox30 = SizedBox(width: 30);
+  static const Widget sizedBox18 = SizedBox(height: 18);
+  static const Widget sizedBoxWidth30 = SizedBox(width: 30);
   static const Widget sizedBoxWidthPadding = SizedBox(width: 20);
+  static const Widget sizedBox40 = SizedBox(height: 40,);
   //Loading
   static const Widget buildLoading = CupertinoActivityIndicator();
 

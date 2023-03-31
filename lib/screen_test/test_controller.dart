@@ -4,10 +4,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_application_3/main.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 class TestController extends BaseGetxController {
   //Login
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textEditingController2 = TextEditingController();
+  TextEditingController searchCtr = TextEditingController();
+  TextEditingController adult = TextEditingController();
+  TextEditingController kids = TextEditingController();
   //Category
   List<String> categoryListString = [
     "Ha Noi",
@@ -18,40 +23,41 @@ class TestController extends BaseGetxController {
     "Ninh Binh",
     "Thai Nguyen"
   ];
+  // Rx<DateTime?> selectedDay = DateTime.now().obs;
+  DateTime? focusedDay;
+  DateTime? startDay;
+  DateTime? endDay;
+  DateTime? selectedDay = DateTime.now();
+  bool isRangeDateSelect = false;
   RxInt indexSelect = 0.obs;
   RxInt currentPageScroll = 0.obs;
-  CarouselController carouselController  = CarouselController();
-  @override
-  void onInit() async {
-    // showLoading();
-    // final fcmToken = await firebaseMessaging.getToken();
-    // print(fcmToken);
-    // if (await requestPermission()) {
-    //   // await tokenSetup();
-    //   await initNofitication();
 
-    //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //     RemoteNotification? notification = message.notification;
-    //     AndroidNotification? android = notification?.android;
+  int get numberOfNight {
+    if (endDay != null) {
+      return (startDay?.difference(endDay!).inDays ?? 0).abs() -1 ;
+    }
+    return 0;
+  }           
 
-    //     // If `onMessage` is triggered with a notification, construct our own
-    //     // local notification to show to users using the created channel.
-    //     if (notification != null && android != null) {
-    //       showNotification();
-    //     }
-    //   });
-    //   // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   //   print('Got a message whilst in the foreground!');
-    //   //   print('Message data: ${message.data}');
-    //   //   if (message.notification != null) {
-    //   //     print(
-    //   //         'Message also contained a notification: ${message.notification}');
-    //   //   }
-    //   // });
-    // }
+  CarouselController carouselController = CarouselController();
+  void onDaySelected(DateTime selected, DateTime focused) {
+    if (!isSameDay(selectedDay, selected)) {
+      focusedDay = focused;
+      selectedDay = selected;
+      startDay = null;
+      endDay = null;
+      isRangeDateSelect = false;
+      update();
+    }
+  }
 
-    // hideLoading();
-    super.onInit();
+  void onRangeDaySelect(DateTime? start, DateTime? end, DateTime? focus) {
+    focusedDay = focus;
+    startDay = start;
+    endDay = end;
+    selectedDay = start;
+    isRangeDateSelect = true;
+    update();
   }
 
   Future<bool> requestPermission() async {

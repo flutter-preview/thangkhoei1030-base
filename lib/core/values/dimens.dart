@@ -24,6 +24,7 @@ class AppDimens {
   static const double btnQuickCreate = 73;
   static const double btnRecommend = 30;
   static const double sizeIcon40 = 40;
+  static const double sizeTextLarge = 20;
 
   static const double sizeIconVerySmall = 12;
   static const double sizeIconSmall = 16;
@@ -53,6 +54,8 @@ class AppDimens {
   static const double paddingLabel = 4;
   static const double padding25 = 25;
   static const double padding15 = 15;
+  static const double padding35 = 35;
+  static const double padding22 = 22;
 
   static const double showAppBarDetails = 200;
   static const double sizeAppBarBig = 120;
@@ -71,6 +74,7 @@ class AppDimens {
   static const double radius20 = 20;
   static const double radiusDefault = 44;
   static const double borderDefault = 1;
+  static const double radius25 = 25;
 
   // home
   static const double sizeItemNewsHome = 110;
@@ -116,6 +120,8 @@ class AppDimens {
   static const double resolutionWidgetTextEditing = 309/391;
   static const double resolutionWidgetDropdown = 93/391;
   static const double resolutionWidgetDropdownHeight = 50/844;
+  static const double radiusCard = 10;
+  static const double radius32 = 32;
 }
 
 extension GetSizeScreen on num {

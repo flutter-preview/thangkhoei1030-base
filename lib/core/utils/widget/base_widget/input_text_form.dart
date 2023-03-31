@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../enums/input_formatter_enum.dart';
 import '../../../theme/colors.dart';
-import '../../../values/AppPaddings/padding_input.dart';
+import '../../../values/app_padding/padding_input.dart';
 import '../../../values/dimens.dart';
 import '../../hardware_keyboard_win.dart';
 import '../../limit_textfield.dart';
@@ -109,6 +109,25 @@ class _BuildInputTextState extends State<BuildInputText> {
           );
   }
 
+  Widget? _prefixIcon() {
+    return (widget.inputTextFormModel.iconLeading != null
+        ? Icon(
+            widget.inputTextFormModel.iconLeading,
+            color: widget.inputTextFormModel.prefixIconColor ??
+                AppColors.colorIconDefault,
+            size: AppDimens.sizeIcon,
+          )
+        : null);
+  }
+
+  TextStyle? _textStyle() {
+    return widget.inputTextFormModel.style ??
+        Get.textTheme.bodyText1?.copyWith(
+            fontSize:
+                widget.inputTextFormModel.textSize ?? AppDimens.fontSmall(),
+            color: widget.inputTextFormModel.textColor ?? Colors.black);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -125,11 +144,7 @@ class _BuildInputTextState extends State<BuildInputText> {
             widget.inputTextFormModel.onChanged?.call(v);
           },
           textInputAction: widget.inputTextFormModel.iconNextTextInputAction,
-          style: widget.inputTextFormModel.style ??
-              Get.textTheme.bodyText1?.copyWith(
-                  fontSize: widget.inputTextFormModel.textSize ??
-                      AppDimens.fontSmall(),
-                  color: widget.inputTextFormModel.textColor ?? Colors.black),
+          style: _textStyle(),
           controller: widget.inputTextFormModel.controller,
           obscureText: _showPassword.value,
           onTap: widget.inputTextFormModel.onTap,
@@ -173,14 +188,7 @@ class _BuildInputTextState extends State<BuildInputText> {
               color: widget.inputTextFormModel.errorTextColor ??
                   AppColors.colorRed444,
             ),
-            prefixIcon: widget.inputTextFormModel.iconLeading != null
-                ? Icon(
-                    widget.inputTextFormModel.iconLeading,
-                    color: widget.inputTextFormModel.prefixIconColor ??
-                        AppColors.colorIconDefault,
-                    size: AppDimens.sizeIcon,
-                  )
-                : null,
+            prefixIcon: _prefixIcon(),
             prefixStyle: const TextStyle(
                 color: Colors.red, backgroundColor: AppColors.colorIconDefault),
             border: widget.inputTextFormModel.border ??
@@ -190,7 +198,9 @@ class _BuildInputTextState extends State<BuildInputText> {
                     borderSide: BorderSide.none),
             contentPadding: widget.inputTextFormModel.contentPadding ??
                 AppPaddings.paddingContentInput,
-            suffixIcon: _suffixIcon(),
+            suffixIcon: widget.inputTextFormModel.isUseSuffixIcon
+                ? _suffixIcon()
+                : widget.inputTextFormModel.suffixWidget,
             helperText: widget.inputTextFormModel.helperText,
             helperStyle: widget.inputTextFormModel.helperStyle,
             helperMaxLines: widget.inputTextFormModel.helperMaxLines,

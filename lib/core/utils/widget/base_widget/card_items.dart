@@ -16,10 +16,11 @@ class CardUtils {
     double spreadRadius = 2.5,
     double blurRadius = 10,
     List<BoxShadow>? boxShadows,
+    Color? backgroundColor,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? Colors.white,
         //Here goes the same radius, u can put into a var or function
         borderRadius: BorderRadius.only(
           bottomRight: Radius.circular(radiusAll ?? radiusBottomRight ?? 0),
