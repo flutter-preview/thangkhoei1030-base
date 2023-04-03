@@ -57,16 +57,6 @@ class CardUtils {
             widthImage: widthImage ?? double.infinity,
           ),
         ),
-        // Container(
-        //   height: heightImage ?? 200,
-        //   width: widthImage ?? double.infinity,
-        //   decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //       fit: BoxFit.cover,
-        //       image: NetworkImage(url),
-        //     ),
-        //   ),
-        // ),
         cardInfo.paddingSymmetric(
             horizontal: AppDimens.paddingSmall,
             vertical: AppDimens.paddingSmall)

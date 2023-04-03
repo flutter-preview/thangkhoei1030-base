@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_3/base/controller/base_controller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_application_3/main.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class TestController extends BaseGetxController {
+class TestController extends BaseGetxController with GetTickerProviderStateMixin {
   //Login
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textEditingController2 = TextEditingController();

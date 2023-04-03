@@ -56,6 +56,7 @@ class AppDimens {
   static const double padding15 = 15;
   static const double padding35 = 35;
   static const double padding22 = 22;
+  static const double padding46 = 46;
 
   static const double showAppBarDetails = 200;
   static const double sizeAppBarBig = 120;
@@ -75,6 +76,7 @@ class AppDimens {
   static const double radiusDefault = 44;
   static const double borderDefault = 1;
   static const double radius25 = 25;
+  static const double radius10 = 10;
 
   // home
   static const double sizeItemNewsHome = 110;

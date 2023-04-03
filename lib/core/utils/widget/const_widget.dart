@@ -20,6 +20,7 @@ class WidgetConst {
   static const Widget sizedBoxWidth30 = SizedBox(width: 30);
   static const Widget sizedBoxWidthPadding = SizedBox(width: 20);
   static const Widget sizedBox40 = SizedBox(height: 40,);
+  static const Widget sizedBox25 = SizedBox(height: 25,);
   //Loading
   static const Widget buildLoading = CupertinoActivityIndicator();
 

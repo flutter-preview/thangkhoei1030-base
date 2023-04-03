@@ -84,7 +84,7 @@ class UtilWidget {
     int? maxline,
     double? foniSize,
   }) {
-    return Text(
+    return AutoSizeText(
       text,
       textAlign: textAlign ?? TextAlign.center,
       style: Get.textTheme.bodyText2!.copyWith(
@@ -190,7 +190,7 @@ class UtilWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(title.tr,
+                        child: AutoSizeText(title.tr,
                             textAlign: textAlign ?? TextAlign.center,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -325,13 +325,12 @@ class UtilWidget {
     EdgeInsetsGeometry? contentPadding,
     TextAlign? alignText,
     bool isUseSuffixIcon = true,
-
   }) {
     return SizedBox(
         width: Get.width,
         child: BuildInputText(
           InputTextModel(
-            textAlign: alignText,
+              textAlign: alignText,
               borderRadius: borderRadius,
               enable: enable,
               textColor: textColor,
@@ -475,26 +474,35 @@ class UtilWidget {
     String? urlImages,
     double? heightImagesLeading,
     double? widthImageLeading,
+    double? radiusImageLeading,
+    bool isUseRadius = true,
+    List<BoxShadow>? boxShadow,
   }) {
     return UtilButton.baseOnAction(
         onTap: func ?? () {},
         child: ListTile(
+          contentPadding: EdgeInsets.zero,
+          visualDensity: const VisualDensity(vertical: 3),
           leading: isShowLeading
               ? buildIconInItemLine(
+                  boxShadow: boxShadow,
                   iconLeading: iconLeading,
                   urlImages: urlImages,
                   heightImage: heightImagesLeading,
                   widthImage: widthImageLeading,
+                  radius: isUseRadius
+                      ? radiusImageLeading ?? AppDimens.radius10
+                      : null,
                 )
               : null,
           title: title != null
-              ? Text(
+              ? AutoSizeText(
                   title,
                   style: titleStyle,
                 )
               : null,
           subtitle: subtitle != null
-              ? Text(
+              ? AutoSizeText(
                   subtitle,
                   style: subStyle,
                 )
@@ -510,10 +518,13 @@ class UtilWidget {
     String? urlImages,
     IconData? iconLeading,
     Color? colorIcon,
+    double? radius,
+    List<BoxShadow>? boxShadow,
   }) {
     return urlImages != null
         ? CardUtils.buildCardCustomRadiusBorder(
-            radiusAll: 10,
+            radiusAll: radius,
+            boxShadows: boxShadow,
             child: Container(
               height: heightImage ?? 50,
               width: widthImage ?? 50,
@@ -534,7 +545,7 @@ class UtilWidget {
   //       onTap: func ?? () {},
   //       child: Row(
   //         children: [
-  //           Text(
+  //           AutoSizeText(
   //             rating.toString(),
   //             style: Get.textTheme.bodyText1,
   //           ),

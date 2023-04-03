@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_3/core/enums/input_formatter_enum.dart';
@@ -23,6 +25,7 @@ part 'category.dart';
 part 'destination_detail.dart';
 part 'hotels.dart';
 part 'booking.dart';
+part 'favourite.dart';
 
 class TestScreen extends BaseGetWidget<TestController> {
   const TestScreen({super.key});
@@ -30,7 +33,9 @@ class TestScreen extends BaseGetWidget<TestController> {
   TestController get controller => Get.put(TestController());
   @override
   Widget buildWidgets() {
-    return _buildBooking(controller);
+    return _buildFavourite(controller);
+    // return _buildHotelsPage(controller);
+    // return _buildBooking(controller);
     // return _buildPageCategory(controller);
     // return _buildPageDestinationDetail(controller);
     // return _buildLogin(controller).paddingOnly(bottom: Get.mediaQuery.viewInsets.bottom);

@@ -8,40 +8,47 @@ Widget _buildBooking(TestController controller) {
     body: GetBuilder<TestController>(
       builder: (controller) => Column(
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: PageUtils.buildAppBarTitle(
-              'Booking',
-              style: Get.textTheme.titleMedium!.copyWith(
-                shadows: BoxShadowsConst.shadowText,
-                fontSize: AppDimens.sizeTextLarge,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: PageUtils.buildAppBarTitle(
+                      'Booking',
+                      style: Get.textTheme.titleMedium!.copyWith(
+                        shadows: BoxShadowsConst.shadowText,
+                        fontSize: AppDimens.sizeTextLarge,
+                      ),
+                    ),
+                  ),
+                  WidgetConst.sizedBox18,
+                  controller.isRangeDateSelect
+                      ? _buildInfoTime(controller)
+                      : Align(
+                          alignment: Alignment.center,
+                          child: _buildTimeDetail(controller.selectedDay, 'In')),
+                  WidgetConst.sizedBox18,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: UtilWidget.buildTitle(
+                      text: DateFormat(DateFormat.YEAR_MONTH).format(
+                        controller.focusedDay ?? DateTime.now(),
+                      ),
+                      colorText: AppColors.backGroundColorButtonDefault,
+                    ),
+                  ),
+                  WidgetConst.sizedBoxPadding,
+                  _buildRangeTime(controller),
+                  WidgetConst.sizedBox40,
+                  _buildNumberOfNight(controller),
+                  WidgetConst.sizedBox18,
+                  _buildInfoOrder(controller),
+                ],
               ),
             ),
           ),
-          WidgetConst.sizedBox18,
-          controller.isRangeDateSelect
-              ? _buildInfoTime(controller)
-              : Align(
-                  alignment: Alignment.center,
-                  child: _buildTimeDetail(controller.selectedDay, 'In')),
-          WidgetConst.sizedBox18,
-          Align(
-            alignment: Alignment.centerLeft,
-            child: UtilWidget.buildTitle(
-              text: DateFormat(DateFormat.YEAR_MONTH).format(
-                controller.focusedDay ?? DateTime.now(),
-              ),
-              colorText: AppColors.backGroundColorButtonDefault,
-            ),
-          ),
-          WidgetConst.sizedBoxPadding,
-          _buildRangeTime(controller),
-          WidgetConst.sizedBox40,
-          _buildNumberOfNight(controller),
-          WidgetConst.sizedBox18,
-          _buildInfoOrder(controller),
-          WidgetConst.sizedBoxPadding,
-          _buildButton()
+          _buildButton().paddingSymmetric(vertical: AppDimens.defaultPadding)
         ],
       ).paddingSymmetric(
         horizontal: AppDimens.paddingLarge,
