@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_application_3/core/enums/input_formatter_enum.dart';
 import 'package:flutter_application_3/core/theme/colors.dart';
 import 'package:flutter_application_3/core/utils/models/button_model.dart';
@@ -26,6 +27,7 @@ part 'destination_detail.dart';
 part 'hotels.dart';
 part 'booking.dart';
 part 'favourite.dart';
+part 'messages.dart';
 
 class TestScreen extends BaseGetWidget<TestController> {
   const TestScreen({super.key});
@@ -33,7 +35,11 @@ class TestScreen extends BaseGetWidget<TestController> {
   TestController get controller => Get.put(TestController());
   @override
   Widget buildWidgets() {
-    return _buildFavourite(controller);
+    return GestureDetector(
+        // behavior: HitTestBehavior.translucent,
+        onTap: FocusManager.instance.primaryFocus?.unfocus,
+        child: _buildMessagesPage(controller));
+    // return _buildFavourite(controller);
     // return _buildHotelsPage(controller);
     // return _buildBooking(controller);
     // return _buildPageCategory(controller);

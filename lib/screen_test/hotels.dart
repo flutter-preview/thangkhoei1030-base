@@ -120,10 +120,12 @@ Widget _buildItemPopularOffer() {
                 'https://cdn.pixabay.com/photo/2015/10/30/20/13/sunrise-1014712_960_720.jpg',
             heightImagesLeading: 69,
             widthImageLeading: 69,
-            title: 'Sel de Mer Hotel & Suites',
-            titleStyle: Get.textTheme.bodyText1,
-            subtitle: r'From $345',
-            subStyle: Get.textTheme.bodySmall,
+            title: AutoSizeText(
+              'Sel de Mer Hotel & Suites',
+              style: Get.textTheme.bodyText1,
+            ),
+            subtitle:
+                AutoSizeText(r'From $345', style: Get.textTheme.bodySmall),
             trailing: UtilWidget.buildAction(
               text: 4.7.toString(),
               spaceAround: AppDimens.paddingSmallest,

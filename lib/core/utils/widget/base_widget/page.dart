@@ -22,6 +22,18 @@ class PageUtils {
     );
   }
 
+  static Widget buildPageScaffold({
+    Color? backgroundColorPage,
+    required Widget body,
+    PreferredSizeWidget? appBar,
+  }) {
+    return Scaffold(
+      backgroundColor: backgroundColorPage ?? Colors.white,
+      appBar: appBar,
+      body: body,
+    );
+  }
+
   static PreferredSizeWidget buildAppBar(
     String title, {
     TextStyle? textStyle,
@@ -82,7 +94,8 @@ class PageUtils {
             child: appBar,
           ),
         ],
-      ),    );
+      ),
+    );
   }
 
   static Widget buildAppBarCustom(
@@ -221,6 +234,4 @@ class PageUtils {
       ),
     );
   }
-
-
 }

@@ -116,6 +116,8 @@ class _BuildInputTextState extends State<BuildInputText> {
             color: widget.inputTextFormModel.prefixIconColor ??
                 AppColors.colorIconDefault,
             size: AppDimens.sizeIcon,
+          ).paddingSymmetric(
+            horizontal: AppDimens.paddingHuge,
           )
         : null);
   }

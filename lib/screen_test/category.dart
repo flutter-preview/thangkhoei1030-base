@@ -158,7 +158,7 @@ Widget buildCategoryHorizontal() {
         spreadRadius: 0.1,
         radiusAll: 10,
         boxShadows: BoxShadowsConst.shadowCard,
-        child: UtilWidget.buildItemLine(
+        child: UtilWidget.buildCustomItemLine(
           trailing: UtilWidget.buildAction(
               spaceAround: AppDimens.paddingVerySmall,
               text: 4.8.toString(),

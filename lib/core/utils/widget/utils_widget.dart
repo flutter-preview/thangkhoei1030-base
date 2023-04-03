@@ -297,37 +297,36 @@ class UtilWidget {
   }
 
   //TODO: Build Input
-  static Widget buildInput(
-    TextEditingController textEditingController, {
-    String label = '',
-    FocusNode? focusNode,
-    FocusNode? nextNode,
-    bool enable = true,
-    TextInputType textInputType = TextInputType.multiline,
-    Widget? icon,
-    Function(String)? onChanged,
-    Function()? onTap,
-    Function(String)? onNext,
-    Function(String)? submitFunc,
-    bool isRequired = false,
-    InputFormatter inputFormatters = InputFormatter.none,
-    TextInputAction iconNextTextInputAction = TextInputAction.next,
-    Color fillColor = Colors.white,
-    Color textColor = Colors.black,
-    String? hintText,
-    int? minLengthInputForm,
-    int? maxLengthInputForm,
-    TypeInput typeInput = TypeInput.none,
-    bool showCounter = false,
-    bool isReadOnly = false,
-    IconData? iconLeading,
-    double borderRadius = 20,
-    EdgeInsetsGeometry? contentPadding,
-    TextAlign? alignText,
-    bool isUseSuffixIcon = true,
-  }) {
+  static Widget buildInput(TextEditingController textEditingController,
+      {String label = '',
+      FocusNode? focusNode,
+      FocusNode? nextNode,
+      bool enable = true,
+      TextInputType textInputType = TextInputType.multiline,
+      Widget? icon,
+      Function(String)? onChanged,
+      Function()? onTap,
+      Function(String)? onNext,
+      Function(String)? submitFunc,
+      bool isRequired = false,
+      InputFormatter inputFormatters = InputFormatter.none,
+      TextInputAction iconNextTextInputAction = TextInputAction.next,
+      Color fillColor = Colors.white,
+      Color textColor = Colors.black,
+      String? hintText,
+      int? minLengthInputForm,
+      int? maxLengthInputForm,
+      TypeInput typeInput = TypeInput.none,
+      bool showCounter = false,
+      bool isReadOnly = false,
+      IconData? iconLeading,
+      double borderRadius = 20,
+      EdgeInsetsGeometry? contentPadding,
+      TextAlign? alignText,
+      bool isUseSuffixIcon = true,
+      double? widthInput}) {
     return SizedBox(
-        width: Get.width,
+        width: widthInput ?? Get.width * AppDimens.resolutionWidgetTextEditing,
         child: BuildInputText(
           InputTextModel(
               textAlign: alignText,
@@ -396,7 +395,7 @@ class UtilWidget {
   static Widget buildScrollList({
     required int itemsCount,
     required Widget Function(int) itemWidget,
-    required Axis scrollDirection,
+    Axis scrollDirection = Axis.vertical,
     Widget? separatorWidget,
     double? height,
     bool isScroll = true,
@@ -465,10 +464,12 @@ class UtilWidget {
     double? heightLeading,
     IconData? iconLeading,
     bool isShowLeading = true,
-    String? title,
-    TextStyle? titleStyle,
-    String? subtitle,
-    TextStyle? subStyle,
+    Widget? title,
+    Widget? subtitle,
+    // String? title,
+    // TextStyle? titleStyle,
+    // String? subtitle,
+    // TextStyle? subStyle,
     Function()? onTap,
     Widget? trailing,
     String? urlImages,
@@ -482,6 +483,7 @@ class UtilWidget {
         onTap: func ?? () {},
         child: ListTile(
           contentPadding: EdgeInsets.zero,
+          dense: true,
           visualDensity: const VisualDensity(vertical: 3),
           leading: isShowLeading
               ? buildIconInItemLine(
@@ -495,19 +497,9 @@ class UtilWidget {
                       : null,
                 )
               : null,
-          title: title != null
-              ? AutoSizeText(
-                  title,
-                  style: titleStyle,
-                )
-              : null,
-          subtitle: subtitle != null
-              ? AutoSizeText(
-                  subtitle,
-                  style: subStyle,
-                )
-              : null,
-          trailing: FittedBox(child: trailing),
+          title: title,
+          subtitle: subtitle,
+          trailing: trailing,
           onTap: onTap ?? () {},
         ));
   }
@@ -558,7 +550,7 @@ class UtilWidget {
   //       ),
   //     );
 
-  static Widget buildItemLine({
+  static Widget buildCustomItemLine({
     required Widget child,
     Function()? func,
     String? urlLeading,
@@ -617,7 +609,7 @@ class UtilWidget {
     double? raidus,
   }) {
     return CardUtils.buildCardCustomRadiusBorder(
-      radiusAll: 20,
+      radiusAll: raidus,
       child: Container(
         height: heightImage ?? 50,
         width: widthImage ?? 50,
