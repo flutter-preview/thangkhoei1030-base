@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
           selectedColor: AppColors.backGroundColorButtonDefault,
           backgroundColor: Colors.white,
         ),
-        
       ),
       home: const TestScreen(),
     );

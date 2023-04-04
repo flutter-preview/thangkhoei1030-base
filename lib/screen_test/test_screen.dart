@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import '../base/widget/base_widget.dart';
 import '../core/theme/boxShadows.dart';
 import '../core/utils/widget/base_widget/page.dart';
@@ -27,7 +31,8 @@ part 'destination_detail.dart';
 part 'hotels.dart';
 part 'booking.dart';
 part 'favourite.dart';
-part 'messages.dart';
+part 'messages.dart'; 
+part 'chat.dart';
 
 class TestScreen extends BaseGetWidget<TestController> {
   const TestScreen({super.key});
@@ -36,9 +41,10 @@ class TestScreen extends BaseGetWidget<TestController> {
   @override
   Widget buildWidgets() {
     return GestureDetector(
-        // behavior: HitTestBehavior.translucent,
-        onTap: FocusManager.instance.primaryFocus?.unfocus,
-        child: _buildMessagesPage(controller));
+      // behavior: HitTestBehavior.translucent,
+      onTap: FocusManager.instance.primaryFocus?.unfocus,
+      child: _buildChatMessage(controller),
+    );
     // return _buildFavourite(controller);
     // return _buildHotelsPage(controller);
     // return _buildBooking(controller);
